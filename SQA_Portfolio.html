@@ -1,0 +1,3080 @@
+htmlDownloadCopy code<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>SQA Engineer Portfolio | Dynamic Glassmorphism</title>
+  <style>
+    :root{
+      --bg0:#070A12;
+      --bg1:#0B1220;
+      --card: rgba(255,255,255,.08);
+      --card2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.72);
+      --muted2: rgba(255,255,255,.56);
+      --accent:#7C5CFF;
+      --accent2:#2EE9A7;
+      --warn:#FFCC66;
+      --bad:#FF5C7C;
+      --good:#2EE9A7;
+      --shadow: 0 24px 70px rgba(0,0,0,.55);
+      --shadow2: 0 14px 45px rgba(0,0,0,.45);
+      --blur: 16px;
+      --radius: 18px;
+      --radius2: 26px;
+      --ring: 0 0 0 3px rgba(124,92,255,.22);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --max: 1160px;
+    }
+    [data-theme="light"]{
+      --bg0:#F7F8FF;
+      --bg1:#ECF0FF;
+      --card: rgba(255,255,255,.72);
+      --card2: rgba(255,255,255,.55);
+      --stroke: rgba(20,24,35,.12);
+      --stroke2: rgba(20,24,35,.09);
+      --text: rgba(12,16,26,.92);
+      --muted: rgba(12,16,26,.72);
+      --muted2: rgba(12,16,26,.58);
+      --shadow: 0 18px 60px rgba(18,22,35,.18);
+      --shadow2: 0 12px 34px rgba(18,22,35,.14);
+      --ring: 0 0 0 3px rgba(124,92,255,.22);
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(124,92,255,.22), transparent 55%),
+                  radial-gradient(1000px 520px at 85% 20%, rgba(46,233,167,.16), transparent 60%),
+                  radial-gradient(900px 520px at 50% 100%, rgba(255,92,124,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+    a{ color: inherit; text-decoration: none; }
+    button, input, textarea, select { font: inherit; color: inherit; }
+    ::selection{ background: rgba(124,92,255,.35); }
+
+    /* Loader */
+    #loader{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(1000px 600px at 30% 10%, rgba(124,92,255,.28), transparent 55%),
+                  radial-gradient(900px 560px at 75% 20%, rgba(46,233,167,.18), transparent 60%),
+                  linear-gradient(180deg, rgba(6,8,16,.98), rgba(6,10,18,.96));
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    [data-theme="light"] #loader{
+      background: radial-gradient(1000px 600px at 30% 10%, rgba(124,92,255,.16), transparent 55%),
+                  radial-gradient(900px 560px at 75% 20%, rgba(46,233,167,.12), transparent 60%),
+                  linear-gradient(180deg, rgba(248,249,255,.98), rgba(236,240,255,.97));
+    }
+    #loader.hide{
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+    }
+    .loaderCard{
+      width: min(560px, calc(100vw - 32px));
+      border-radius: 22px;
+      padding: 22px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    [data-theme="light"] .loaderCard{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(20,24,35,.12);
+    }
+    .loaderTop{
+      display:flex; align-items:center; justify-content: space-between; gap: 16px;
+    }
+    .brandMini{
+      display:flex; align-items:center; gap: 12px;
+    }
+    .logo{
+      width: 44px; height: 44px; border-radius: 14px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 55%),
+                  linear-gradient(135deg, rgba(124,92,255,.95), rgba(46,233,167,.85));
+      box-shadow: 0 14px 28px rgba(124,92,255,.18), 0 14px 28px rgba(46,233,167,.12);
+      position: relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset: -60%;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.26), transparent 55%);
+      transform: rotate(18deg);
+      filter: blur(2px);
+      opacity:.6;
+      animation: drift 2.6s ease-in-out infinite alternate;
+    }
+    @keyframes drift{
+      0%{ transform: translate(-3px, 2px) rotate(14deg); opacity: .55; }
+      100%{ transform: translate(4px, -2px) rotate(20deg); opacity: .85; }
+    }
+    .loaderTitle{
+      font-weight: 760;
+      letter-spacing: .2px;
+      font-size: 16px;
+      line-height: 1.15;
+    }
+    .loaderSub{
+      margin-top: 2px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .spin{
+      width: 36px; height: 36px; border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.22);
+      border-top-color: rgba(255,255,255,.78);
+      animation: spin .9s linear infinite;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+    }
+    [data-theme="light"] .spin{
+      border-color: rgba(12,16,26,.14);
+      border-top-color: rgba(12,16,26,.62);
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
+
+    .progressWrap{
+      margin-top: 16px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow: hidden;
+    }
+    [data-theme="light"] .bar{
+      background: rgba(12,16,26,.06);
+      border-color: rgba(12,16,26,.10);
+    }
+    .bar > i{
+      display:block;
+      height: 100%;
+      width: 1%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124,92,255,.95), rgba(46,233,167,.90));
+      box-shadow: 0 10px 20px rgba(124,92,255,.22);
+      transition: width .18s ease;
+    }
+    .loaderRow{
+      display:flex; align-items:center; justify-content:space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+      gap: 12px;
+    }
+    .chip{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--muted);
+      user-select:none;
+    }
+    [data-theme="light"] .chip{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+      color: var(--muted);
+    }
+    .dot{
+      width: 8px; height: 8px; border-radius: 999px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 5px rgba(46,233,167,.10);
+    }
+
+    /* Background canvas */
+    #bgfx{
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .75;
+      filter: saturate(1.05);
+    }
+    [data-theme="light"] #bgfx{
+      opacity: .55;
+      filter: saturate(1.0);
+    }
+
+    /* Layout */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      background: linear-gradient(180deg, rgba(8,10,18,.78), rgba(8,10,18,.52));
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    [data-theme="light"] header{
+      background: linear-gradient(180deg, rgba(247,248,255,.78), rgba(247,248,255,.52));
+      border-bottom-color: rgba(12,16,26,.10);
+    }
+    .nav{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .navLeft{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 220px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .brand .logo{ width: 36px; height: 36px; border-radius: 12px; }
+    .brand strong{
+      font-weight: 820;
+      font-size: 13.5px;
+      letter-spacing: .25px;
+    }
+    .brand span{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .navMid{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .navMid a{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-size: 12.5px;
+      transition: background .18s ease, border-color .18s ease, transform .18s ease, color .18s ease;
+    }
+    .navMid a:hover{
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.12);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+    [data-theme="light"] .navMid a:hover{
+      background: rgba(255,255,255,.70);
+      border-color: rgba(12,16,26,.10);
+    }
+    .navRight{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content: flex-end;
+      min-width: 220px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+      user-select: none;
+    }
+    [data-theme="light"] .btn{
+      background: rgba(255,255,255,.65);
+      border-color: rgba(12,16,26,.10);
+      box-shadow: 0 10px 22px rgba(12,16,26,.10);
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.08);
+      border-color: rgba(255,255,255,.20);
+      box-shadow: var(--shadow2);
+    }
+    [data-theme="light"] .btn:hover{
+      background: rgba(255,255,255,.78);
+      border-color: rgba(12,16,26,.14);
+    }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn.primary{
+      border-color: rgba(124,92,255,.45);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(46,233,167,.70));
+      box-shadow: 0 16px 34px rgba(124,92,255,.20), 0 12px 30px rgba(46,233,167,.10);
+    }
+    .btn.primary:hover{ filter: brightness(1.03); }
+    .btn.ghost{
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.12);
+      color: var(--muted);
+    }
+    [data-theme="light"] .btn.ghost{
+      background: rgba(255,255,255,.58);
+      color: var(--muted);
+    }
+    .icon{
+      width: 16px; height: 16px;
+      display:inline-block;
+    }
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 7px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+    }
+    [data-theme="light"] .kbd{
+      border-color: rgba(12,16,26,.12);
+      background: rgba(255,255,255,.70);
+    }
+
+    main{
+      position: relative;
+      z-index: 1;
+    }
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 26px 16px 80px;
+    }
+    .hero{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    @media (max-width: 980px){
+      .hero{ grid-template-columns: 1fr; }
+      .navLeft, .navRight{ min-width: unset; }
+      .nav{ align-items: flex-start; }
+    }
+
+    .card{
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      position: relative;
+      overflow: hidden;
+    }
+    [data-theme="light"] .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.58));
+      border-color: rgba(12,16,26,.10);
+    }
+    .card:before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(800px 220px at 20% 0%, rgba(124,92,255,.18), transparent 60%),
+                  radial-gradient(800px 220px at 80% 0%, rgba(46,233,167,.14), transparent 60%),
+                  radial-gradient(700px 240px at 50% 110%, rgba(255,92,124,.10), transparent 60%);
+      pointer-events:none;
+      opacity: .8;
+      filter: saturate(1.1);
+    }
+    [data-theme="light"] .card:before{ opacity: .55; }
+
+    .cardInner{
+      position: relative;
+      padding: 22px;
+    }
+
+    .heroTitle{
+      font-size: clamp(26px, 4vw, 44px);
+      letter-spacing: -0.6px;
+      line-height: 1.05;
+      margin: 0 0 10px;
+      font-weight: 880;
+    }
+    .heroTitle .grad{
+      background: linear-gradient(90deg, rgba(124,92,255,.98), rgba(46,233,167,.92));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .heroLead{
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14.5px;
+      line-height: 1.6;
+      max-width: 68ch;
+    }
+    .heroActions{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 14px;
+    }
+    .miniRow{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 12.5px;
+      user-select: none;
+    }
+    [data-theme="light"] .pill{
+      background: rgba(255,255,255,.68);
+      border-color: rgba(12,16,26,.10);
+    }
+    .pill b{ color: var(--text); font-weight: 780; }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .statGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 540px){
+      .statGrid{ grid-template-columns: 1fr; }
+    }
+    .stat{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    [data-theme="light"] .stat{
+      background: rgba(255,255,255,.62);
+      border-color: rgba(12,16,26,.10);
+    }
+    .stat .k{
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 11.5px;
+      letter-spacing: .2px;
+      text-transform: uppercase;
+    }
+    .stat .v{
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 860;
+      letter-spacing: -0.2px;
+    }
+    .stat .h{
+      margin-top: 6px;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .stat:after{
+      content:"";
+      position:absolute;
+      width: 220px;
+      height: 220px;
+      right: -120px;
+      top: -120px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(124,92,255,.28), transparent 60%);
+      filter: blur(2px);
+      opacity: .8;
+      pointer-events:none;
+    }
+
+    section{
+      margin-top: 18px;
+    }
+    .sectionHead{
+      display:flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 24px 0 10px;
+    }
+    .sectionHead h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: -0.2px;
+    }
+    .sectionHead p{
+      margin:0;
+      font-size: 12.5px;
+      color: var(--muted);
+      max-width: 70ch;
+      line-height: 1.5;
+    }
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 980px){ .grid2{ grid-template-columns: 1fr; } }
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 980px){ .grid3{ grid-template-columns: 1fr; } }
+
+    .list{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .item{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+      display:flex;
+      gap: 12px;
+      align-items:flex-start;
+    }
+    [data-theme="light"] .item{
+      background: rgba(255,255,255,.62);
+      border-color: rgba(12,16,26,.10);
+    }
+    .badge{
+      flex: 0 0 auto;
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,.16);
+      background: linear-gradient(135deg, rgba(124,92,255,.35), rgba(46,233,167,.18));
+      box-shadow: 0 14px 28px rgba(0,0,0,.18);
+    }
+    [data-theme="light"] .badge{
+      border-color: rgba(12,16,26,.10);
+      box-shadow: 0 12px 22px rgba(12,16,26,.10);
+    }
+    .item h3{
+      margin:0;
+      font-size: 14px;
+      font-weight: 820;
+      letter-spacing: -0.1px;
+    }
+    .item p{
+      margin: 6px 0 0;
+      font-size: 12.8px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .toolRow{
+      margin-top: 10px;
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-size: 12px;
+      user-select: none;
+    }
+    [data-theme="light"] .tag{
+      background: rgba(255,255,255,.70);
+      border-color: rgba(12,16,26,.10);
+    }
+    .tag i{
+      width: 7px; height: 7px; border-radius: 999px;
+      background: rgba(46,233,167,.95);
+      box-shadow: 0 0 0 5px rgba(46,233,167,.10);
+    }
+
+    /* Skills */
+    .skillsTop{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .seg{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .chipBtn{
+      border-radius: 999px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      cursor:pointer;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease;
+      font-size: 12.5px;
+      user-select: none;
+    }
+    [data-theme="light"] .chipBtn{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+    }
+    .chipBtn:hover{ transform: translateY(-1px); color: var(--text); }
+    .chipBtn[aria-pressed="true"]{
+      color: var(--text);
+      border-color: rgba(124,92,255,.42);
+      background: linear-gradient(135deg, rgba(124,92,255,.28), rgba(46,233,167,.14));
+      box-shadow: 0 10px 22px rgba(124,92,255,.16);
+    }
+    .skillList{
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skill{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      padding: 12px 14px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 10px;
+      align-items:center;
+    }
+    [data-theme="light"] .skill{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+    }
+    @media (max-width: 780px){
+      .skill{ grid-template-columns: 1fr; }
+    }
+    .skill h4{
+      margin:0;
+      font-size: 13.5px;
+      font-weight: 850;
+      letter-spacing: -0.1px;
+    }
+    .skill small{
+      display:block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.4;
+    }
+    .meter{
+      display:flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rail{
+      flex: 1 1 auto;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    [data-theme="light"] .rail{
+      background: rgba(12,16,26,.06);
+      border-color: rgba(12,16,26,.10);
+    }
+    .rail > b{
+      display:block;
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(124,92,255,.92), rgba(46,233,167,.85));
+      transition: width 800ms cubic-bezier(.2,.8,.2,1);
+    }
+    .pct{
+      width: 56px;
+      text-align:right;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Toolkit */
+    .tabs{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tabBtn{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      cursor:pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+      user-select: none;
+      font-size: 12.5px;
+    }
+    [data-theme="light"] .tabBtn{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+    }
+    .tabBtn:hover{ transform: translateY(-1px); color: var(--text); }
+    .tabBtn[aria-selected="true"]{
+      color: var(--text);
+      border-color: rgba(124,92,255,.40);
+      background: linear-gradient(135deg, rgba(124,92,255,.24), rgba(46,233,167,.12));
+    }
+    .panel{
+      display:none;
+    }
+    .panel.active{ display:block; }
+    .formGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 860px){
+      .formGrid{ grid-template-columns: 1fr; }
+    }
+    .field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .field label{
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .control, textarea.control, select.control{
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      outline: none;
+      transition: box-shadow .18s ease, border-color .18s ease, background .18s ease;
+    }
+    [data-theme="light"] .control{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(12,16,26,.12);
+    }
+    textarea.control{ min-height: 120px; resize: vertical; }
+    .control:focus{
+      border-color: rgba(124,92,255,.55);
+      box-shadow: var(--ring);
+      background: rgba(255,255,255,.06);
+    }
+    [data-theme="light"] .control:focus{
+      background: rgba(255,255,255,.82);
+    }
+    .row{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+    .out{
+      margin-top: 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      padding: 12px;
+      overflow:auto;
+      max-height: 360px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.08);
+    }
+    [data-theme="light"] .out{
+      background: rgba(255,255,255,.62);
+      border-color: rgba(12,16,26,.10);
+      box-shadow: inset 0 0 0 1px rgba(12,16,26,.06);
+    }
+    pre{
+      margin:0;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .hint{
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.4;
+    }
+
+    /* Reviews */
+    .reviewTop{
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .scoreCard{
+      display:flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      min-width: 280px;
+    }
+    [data-theme="light"] .scoreCard{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+    }
+    .bigScore{
+      font-weight: 900;
+      font-size: 28px;
+      letter-spacing: -0.4px;
+      margin: 0;
+      line-height: 1;
+    }
+    .scoreMeta{
+      display:flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .stars{
+      display:inline-flex;
+      gap: 4px;
+      align-items:center;
+      user-select:none;
+    }
+    .star{
+      width: 18px; height: 18px;
+      display:inline-block;
+      cursor:pointer;
+      color: rgba(255,255,255,.35);
+      transition: transform .12s ease, color .12s ease;
+    }
+    [data-theme="light"] .star{
+      color: rgba(12,16,26,.28);
+    }
+    .star:hover{ transform: translateY(-1px); }
+    .star.on{ color: rgba(255,204,102,.95); }
+    .star svg{ width: 100%; height: 100%; }
+    .reviewList{
+      margin-top: 12px;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .review{
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      padding: 14px;
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items:start;
+    }
+    [data-theme="light"] .review{
+      background: rgba(255,255,255,.66);
+      border-color: rgba(12,16,26,.10);
+    }
+    .review h4{
+      margin:0;
+      font-size: 13.5px;
+      font-weight: 860;
+      letter-spacing: -0.1px;
+    }
+    .review .meta{
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items:center;
+    }
+    .review .body{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12.8px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .review .right{
+      display:flex;
+      flex-direction: column;
+      align-items:flex-end;
+      gap: 8px;
+      min-width: 130px;
+    }
+    .tinyStars{
+      display:inline-flex;
+      gap: 3px;
+      align-items:center;
+    }
+    .tinyStars span{
+      width: 12px; height: 12px;
+      display:inline-block;
+      color: rgba(255,204,102,.92);
+      opacity: .25;
+    }
+    .tinyStars span.on{ opacity: 1; }
+    .pillMini{
+      padding: 6px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+    [data-theme="light"] .pillMini{
+      background: rgba(255,255,255,.72);
+      border-color: rgba(12,16,26,.10);
+    }
+
+    /* Footer */
+    footer{
+      margin-top: 24px;
+      border-top: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+    }
+    [data-theme="light"] footer{
+      border-top-color: rgba(12,16,26,.10);
+      background: rgba(255,255,255,.45);
+    }
+    .foot{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 16px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items:center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    /* Motion & reveals */
+    .reveal{
+      opacity: 0;
+      transform: translateY(10px);
+      filter: blur(1px);
+      transition: opacity .6s cubic-bezier(.2,.8,.2,1), transform .6s cubic-bezier(.2,.8,.2,1), filter .6s ease;
+      will-change: transform, opacity;
+    }
+    .reveal.in{
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .reveal{ opacity: 1; transform:none; filter:none; transition:none; }
+      .spin{ animation: none; }
+      #bgfx{ display:none; }
+    }
+
+    /* Toast */
+    .toastWrap{
+      position: fixed;
+      inset: auto 16px 16px auto;
+      z-index: 80;
+      display:flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .toast{
+      pointer-events: auto;
+      width: min(420px, calc(100vw - 32px));
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(var(--blur));
+      -webkit-backdrop-filter: blur(var(--blur));
+      box-shadow: var(--shadow2);
+      padding: 12px 12px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      transform: translateY(8px);
+      opacity: 0;
+      animation: toastIn .22s ease forwards;
+    }
+    [data-theme="light"] .toast{
+      background: rgba(255,255,255,.78);
+      border-color: rgba(12,16,26,.12);
+      box-shadow: 0 12px 34px rgba(12,16,26,.12);
+    }
+    @keyframes toastIn{
+      to{ transform: translateY(0); opacity: 1; }
+    }
+    .toast .ticon{
+      width: 28px; height: 28px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(124,92,255,.28), rgba(46,233,167,.14));
+      flex: 0 0 auto;
+    }
+    [data-theme="light"] .toast .ticon{ border-color: rgba(12,16,26,.10); }
+    .toast .tbody{ flex: 1 1 auto; }
+    .toast .ttitle{
+      font-weight: 820;
+      font-size: 12.8px;
+      margin: 0;
+      letter-spacing: -0.1px;
+    }
+    .toast .tmsg{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12.2px;
+      line-height: 1.35;
+    }
+    .toast .tclose{
+      border: none;
+      background: transparent;
+      padding: 4px 6px;
+      border-radius: 10px;
+      cursor:pointer;
+      color: var(--muted);
+      transition: background .18s ease, color .18s ease;
+      flex: 0 0 auto;
+    }
+    .toast .tclose:hover{
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+    }
+    [data-theme="light"] .toast .tclose:hover{
+      background: rgba(12,16,26,.06);
+    }
+
+    /* Focus */
+    :focus-visible{ outline: none; box-shadow: var(--ring); border-color: rgba(124,92,255,.55)!important; }
+  </style>
+</head>
+
+<body data-theme="dark">
+  <canvas id="bgfx" aria-hidden="true"></canvas>
+
+  <div id="loader" role="status" aria-live="polite" aria-label="Loading portfolio">
+    <div class="loaderCard">
+      <div class="loaderTop">
+        <div class="brandMini">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <div class="loaderTitle">SQA Engineer Portfolio</div>
+            <div class="loaderSub">Quality first. Clarity always.</div>
+          </div>
+        </div>
+        <div class="spin" aria-hidden="true"></div>
+      </div>
+
+      <div class="progressWrap">
+        <div class="bar" aria-hidden="true"><i id="barFill"></i></div>
+        <div class="loaderRow">
+          <div class="chip"><span class="dot" aria-hidden="true"></span><span id="loaderStage">Initializing interface</span></div>
+          <div><span id="loaderPct">0</span><span>%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="nav">
+      <div class="navLeft">
+        <a class="brand" href="#top" aria-label="Go to top">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <strong>SQA Engineer</strong>
+            <span>Portfolio + QA Toolkit</span>
+          </div>
+        </a>
+      </div>
+
+      <nav class="navMid" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#toolkit">Toolkit</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="navRight">
+        <button class="btn ghost" id="cmdBtn" type="button" aria-label="Open command palette">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 7h16M4 12h10M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Commands</span>
+          <span class="kbd" aria-hidden="true">Ctrl K</span>
+        </button>
+        <button class="btn" id="themeBtn" type="button" aria-label="Toggle theme">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span id="themeLabel">Dark</span>
+        </button>
+        <button class="btn primary" id="exportBtn" type="button" aria-label="Export resume as text">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 3v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 14v4a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span>Export Resume</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <div class="hero">
+        <div class="card reveal">
+          <div class="cardInner">
+            <h1 class="heroTitle">
+              Professional <span class="grad">SQA Engineering</span><br/>
+              with measurable quality outcomes
+            </h1>
+            <p class="heroLead">
+              I build reliable release confidence through risk-based testing, crisp defect communication, and pragmatic automation.
+              This page includes a live QA toolkit: generate test cases, produce a bug report in Markdown, and run a quick API smoke check.
+            </p>
+
+            <div class="heroActions">
+              <button class="btn primary" id="jumpToolkitBtn" type="button">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 19h16M8 17V7a2 2 0 0 1 2-2h9l-3 3v9a2 2 0 0 1-2 2H8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Open QA Toolkit</span>
+              </button>
+
+              <button class="btn" id="copySummaryBtn" type="button">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <span>Copy Summary</span>
+              </button>
+
+              <button class="btn ghost" id="scrollReviewsBtn" type="button">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M7 8h10M7 12h6M7 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M4 5a2 2 0 0 1 2-2h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H8l-4 2V5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Leave a Review</span>
+              </button>
+            </div>
+
+            <div class="miniRow" aria-label="Highlights">
+              <span class="pill"><b>Focus</b> risk, coverage, traceability</span>
+              <span class="pill"><b>Strength</b> defects that drive fixes</span>
+              <span class="pill"><b>Style</b> calm, structured, fast</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="heroGrid">
+          <div class="card reveal">
+            <div class="cardInner">
+              <div class="sectionHead" style="margin:0 0 10px;">
+                <h2>Quality snapshot</h2>
+                <p>Numbers below are driven by your inputs in the toolkit and review section during this session.</p>
+              </div>
+              <div class="statGrid">
+                <div class="stat">
+                  <div class="k">Generated artifacts</div>
+                  <div class="v"><span id="metricArtifacts">0</span></div>
+                  <div class="h">Test cases, bug reports, and smoke checks created here.</div>
+                </div>
+                <div class="stat">
+                  <div class="k">Avg review score</div>
+                  <div class="v"><span id="metricAvg">—</span></div>
+                  <div class="h">Updates immediately when reviews are added.</div>
+                </div>
+                <div class="stat">
+                  <div class="k">API checks run</div>
+                  <div class="v"><span id="metricChecks">0</span></div>
+                  <div class="h">Successful or failed requests are both counted.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card reveal">
+            <div class="cardInner">
+              <div class="sectionHead" style="margin:0 0 10px;">
+                <h2>What I deliver</h2>
+                <p>Concise outputs that teams can act on quickly.</p>
+              </div>
+              <div class="list">
+                <div class="item">
+                  <div class="badge" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                      <path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M20 12a8 8 0 1 1-4-6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Release confidence</h3>
+                    <p>Risk-based test selection, lean regression, and clear go/no-go notes with known limitations explicitly documented.</p>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="badge" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 6h16M4 12h10M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M18 11l2 1-2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Actionable defect reports</h3>
+                    <p>Minimal repro steps, expected versus actual, impact, attachments checklist, and strong signals for root cause.</p>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="badge" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                      <path d="M16 18l2-2-2-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M8 6L6 8l2 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M14 4 10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>Pragmatic automation</h3>
+                    <p>Smoke, critical paths, and API contracts first; maintainability and signal-to-noise as non-negotiables.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="toolRow" aria-label="Core tools">
+                <span class="tag"><i aria-hidden="true"></i>Test design</span>
+                <span class="tag"><i aria-hidden="true"></i>API testing</span>
+                <span class="tag"><i aria-hidden="true"></i>UI automation</span>
+                <span class="tag"><i aria-hidden="true"></i>CI hygiene</span>
+                <span class="tag"><i aria-hidden="true"></i>Reporting</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="about" class="reveal">
+        <div class="sectionHead">
+          <h2>About</h2>
+          <p>Quality is not only the absence of bugs; it is predictable behavior under real-world conditions.</p>
+        </div>
+        <div class="grid2">
+          <div class="card">
+            <div class="cardInner">
+              <div class="item" style="background: transparent; border-color: rgba(255,255,255,.10);">
+                <div class="badge" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l2.4 6.7L21 9l-5.3 4.1 2 6.9-5.7-3.9-5.7 3.9 2-6.9L3 9l6.6-.3L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>Testing philosophy</h3>
+                  <p>
+                    Start with the user journey and the business risk, then build coverage through boundary analysis, state transitions,
+                    and a deliberate mix of positive and negative scenarios. Keep artifacts small, readable, and traceable.
+                  </p>
+                </div>
+              </div>
+
+              <div class="item" style="margin-top: 10px; background: transparent; border-color: rgba(255,255,255,.10);">
+                <div class="badge" aria-hidden="true">
+                  <svg class="icon" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 13a8 8 0 0 1 16 0v7H4v-7Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 13v-1a4 4 0 0 1 8 0v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9 18h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div>
+                  <h3>Quality signals</h3>
+                  <p>
+                    Stable CI, low flaky rate, clear release notes, meaningful metrics, and a defect curve that tells a coherent story
+                    (not a scary one). If the metric can be gamed, it will be.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardInner">
+              <div class="sectionHead" style="margin:0 0 10px;">
+                <h2>Quick profile generator</h2>
+                <p>Build a tailored profile summary and export it as part of the resume text.</p>
+              </div>
+
+              <div class="formGrid">
+                <div class="field">
+                  <label for="profileFocus">Primary focus</label>
+                  <select class="control" id="profileFocus">
+                    <option value="risk-based testing and release confidence">Risk-based testing and release confidence</option>
+                    <option value="UI + API test automation for critical paths">UI + API test automation for critical paths</option>
+                    <option value="API contract testing and CI/CD quality gates">API contract testing and CI/CD quality gates</option>
+                    <option value="mobile testing strategy and device coverage">Mobile testing strategy and device coverage</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="profileDomain">Product domain</label>
+                  <select class="control" id="profileDomain">
+                    <option value="B2B SaaS">B2B SaaS</option>
+                    <option value="consumer web">Consumer web</option>
+                    <option value="fintech">Fintech</option>
+                    <option value="health tech">Health tech</option>
+                    <option value="platform / APIs">Platform / APIs</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field" style="margin-top: 10px;">
+                <label for="profileTraits">Working style (select all that apply)</label>
+                <div class="seg" id="traits" role="group" aria-label="Working style traits">
+                  <button class="chipBtn" type="button" data-trait="structured communication" aria-pressed="true">Structured communication</button>
+                  <button class="chipBtn" type="button" data-trait="high-ownership execution" aria-pressed="true">High ownership</button>
+                  <button class="chipBtn" type="button" data-trait="risk triage" aria-pressed="true">Risk triage</button>
+                  <button class="chipBtn" type="button" data-trait="fast iteration" aria-pressed="false">Fast iteration</button>
+                  <button class="chipBtn" type="button" data-trait="mentoring" aria-pressed="false">Mentoring</button>
+                </div>
+                <div class="hint">This stays in memory only; nothing is stored or sent anywhere.</div>
+              </div>
+
+              <div class="row">
+                <button class="btn primary" type="button" id="buildProfileBtn">
+                  <span class="icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span>Generate Summary</span>
+                </button>
+                <button class="btn" type="button" id="copyProfileBtn">
+                  <span class="icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <span>Copy</span>
+                </button>
+              </div>
+
+              <div class="out" aria-live="polite">
+                <pre id="profileOut">Select options and generate a summary.</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="reveal">
+        <div class="sectionHead">
+          <h2>Skills</h2>
+          <p>Filter by focus area. Skill meters animate when the section becomes visible.</p>
+        </div>
+
+        <div class="card">
+          <div class="cardInner">
+            <div class="skillsTop">
+              <div class="seg" role="group" aria-label="Skill filters">
+                <button class="chipBtn" type="button" data-skill-filter="all" aria-pressed="true">All</button>
+                <button class="chipBtn" type="button" data-skill-filter="manual" aria-pressed="false">Manual QA</button>
+                <button class="chipBtn" type="button" data-skill-filter="automation" aria-pressed="false">Automation</button>
+                <button class="chipBtn" type="button" data-skill-filter="api" aria-pressed="false">API</button>
+                <button class="chipBtn" type="button" data-skill-filter="process" aria-pressed="false">Process</button>
+              </div>
+              <div class="chip" title="Tip">
+                <span class="dot" aria-hidden="true" style="background: var(--accent); box-shadow: 0 0 0 5px rgba(124,92,255,.10)"></span>
+                <span>Keyboard: <span class="kbd">Tab</span> to move, <span class="kbd">Enter</span> to toggle.</span>
+              </div>
+            </div>
+
+            <div class="skillList" id="skillList" aria-label="Skills list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="toolkit" class="reveal">
+        <div class="sectionHead">
+          <h2>QA Toolkit</h2>
+          <p>Fully functional, in-page tools. Outputs can be copied. No external libraries and no storage used.</p>
+        </div>
+
+        <div class="card">
+          <div class="cardInner">
+            <div class="tabs" role="tablist" aria-label="Toolkit tabs">
+              <button class="tabBtn" id="tab-tc" role="tab" aria-selected="true" aria-controls="panel-tc" type="button">Test Case Generator</button>
+              <button class="tabBtn" id="tab-bug" role="tab" aria-selected="false" aria-controls="panel-bug" type="button">Bug Report Builder</button>
+              <button class="tabBtn" id="tab-api" role="tab" aria-selected="false" aria-controls="panel-api" type="button">API Smoke Check</button>
+            </div>
+
+            <div id="panel-tc" class="panel active" role="tabpanel" aria-labelledby="tab-tc">
+              <div class="formGrid">
+                <div class="field">
+                  <label for="tcStory">User story or requirement</label>
+                  <textarea class="control" id="tcStory"></textarea>
+                  <div class="hint">Write a concise requirement. The generator will create a risk-aware list (happy paths, boundaries, negatives).</div>
+                </div>
+                <div class="field">
+                  <label for="tcContext">Context (optional)</label>
+                  <textarea class="control" id="tcContext"></textarea>
+                  <div class="hint">Add environment notes, roles, or constraints to influence the cases.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                  <button class="btn primary" type="button" id="genTcBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 7h8M4 12h16M4 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M18 6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M15 9h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Generate</span>
+                  </button>
+                  <button class="btn" type="button" id="copyTcBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Copy</span>
+                  </button>
+                </div>
+
+                <div class="chip" aria-label="Generator settings">
+                  <span class="dot" aria-hidden="true"></span>
+                  <span id="tcMeta">Ready</span>
+                </div>
+              </div>
+
+              <div class="out" aria-live="polite">
+                <pre id="tcOut">Enter a requirement and generate test cases.</pre>
+              </div>
+            </div>
+
+            <div id="panel-bug" class="panel" role="tabpanel" aria-labelledby="tab-bug">
+              <div class="formGrid">
+                <div class="field">
+                  <label for="bugTitle">Title</label>
+                  <input class="control" id="bugTitle" />
+                </div>
+                <div class="field">
+                  <label for="bugSeverity">Severity</label>
+                  <select class="control" id="bugSeverity">
+                    <option>Blocker</option>
+                    <option>Critical</option>
+                    <option>Major</option>
+                    <option selected>Minor</option>
+                    <option>Trivial</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="bugEnv">Environment</label>
+                  <input class="control" id="bugEnv" />
+                  <div class="hint">Example: OS, browser/app version, build number, feature flag state.</div>
+                </div>
+                <div class="field">
+                  <label for="bugArea">Component / area</label>
+                  <input class="control" id="bugArea" />
+                </div>
+              </div>
+
+              <div class="field" style="margin-top: 10px;">
+                <label for="bugSteps">Steps to reproduce</label>
+                <textarea class="control" id="bugSteps"></textarea>
+              </div>
+
+              <div class="formGrid" style="margin-top: 10px;">
+                <div class="field">
+                  <label for="bugExpected">Expected result</label>
+                  <textarea class="control" id="bugExpected"></textarea>
+                </div>
+                <div class="field">
+                  <label for="bugActual">Actual result</label>
+                  <textarea class="control" id="bugActual"></textarea>
+                </div>
+              </div>
+
+              <div class="formGrid" style="margin-top: 10px;">
+                <div class="field">
+                  <label for="bugImpact">Impact / why it matters</label>
+                  <textarea class="control" id="bugImpact"></textarea>
+                </div>
+                <div class="field">
+                  <label for="bugNotes">Notes (optional)</label>
+                  <textarea class="control" id="bugNotes"></textarea>
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                  <button class="btn primary" type="button" id="buildBugBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M7 3h10v4H7V3Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M7 7h10v14H7V7Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M9 11h6M9 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Build Markdown</span>
+                  </button>
+                  <button class="btn" type="button" id="copyBugBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Copy</span>
+                  </button>
+                </div>
+
+                <div class="chip" aria-label="Bug builder status">
+                  <span class="dot" aria-hidden="true" style="background: var(--warn); box-shadow: 0 0 0 5px rgba(255,204,102,.10)"></span>
+                  <span id="bugMeta">Ready</span>
+                </div>
+              </div>
+
+              <div class="out" aria-live="polite">
+                <pre id="bugOut">Fill the fields and build a report.</pre>
+              </div>
+            </div>
+
+            <div id="panel-api" class="panel" role="tabpanel" aria-labelledby="tab-api">
+              <div class="formGrid">
+                <div class="field">
+                  <label for="apiUrl">Request URL</label>
+                  <input class="control" id="apiUrl" />
+                  <div class="hint">Tip: CORS may block browser requests. Errors are shown clearly.</div>
+                </div>
+                <div class="field">
+                  <label for="apiMethod">Method</label>
+                  <select class="control" id="apiMethod">
+                    <option>GET</option>
+                    <option>POST</option>
+                    <option>PUT</option>
+                    <option>PATCH</option>
+                    <option>DELETE</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="formGrid" style="margin-top: 10px;">
+                <div class="field">
+                  <label for="apiHeaders">Headers (JSON object)</label>
+                  <textarea class="control" id="apiHeaders"></textarea>
+                  <div class="hint">Example format: {"Accept":"application/json"}</div>
+                </div>
+                <div class="field">
+                  <label for="apiBody">Body (optional)</label>
+                  <textarea class="control" id="apiBody"></textarea>
+                  <div class="hint">Sent for non-GET requests. If valid JSON, it is sent as JSON.</div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                  <button class="btn primary" type="button" id="runApiBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M8 5v14l11-7L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                    <span>Run Check</span>
+                  </button>
+                  <button class="btn" type="button" id="copyApiBtn">
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                        <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Copy Result</span>
+                  </button>
+                  <button class="btn ghost" type="button" id="abortApiBtn" disabled>
+                    <span class="icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </span>
+                    <span>Abort</span>
+                  </button>
+                </div>
+
+                <div class="chip" aria-label="API status">
+                  <span class="dot" aria-hidden="true" id="apiDot" style="background: var(--accent2); box-shadow: 0 0 0 5px rgba(46,233,167,.10)"></span>
+                  <span id="apiMeta">Idle</span>
+                </div>
+              </div>
+
+              <div class="out" aria-live="polite">
+                <pre id="apiOut">Run a request to see status, timing, and response preview.</pre>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section id="reviews" class="reveal">
+        <div class="sectionHead">
+          <h2>Reviews</h2>
+          <p>Visitor reviews are displayed immediately. They are not persisted after a refresh.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card">
+            <div class="cardInner">
+              <div class="reviewTop">
+                <div class="scoreCard" aria-live="polite">
+                  <div>
+                    <p class="bigScore" id="avgScore">—</p>
+                  </div>
+                  <div class="scoreMeta">
+                    <div class="stars" aria-label="Average rating (read-only)" id="avgStars"></div>
+                    <div style="font-size:12.5px; color: var(--muted);">
+                      <span id="reviewCount">0</span> reviews this session
+                    </div>
+                  </div>
+                </div>
+
+                <div class="chip">
+                  <span class="dot" aria-hidden="true" style="background: var(--warn); box-shadow: 0 0 0 5px rgba(255,204,102,.10)"></span>
+                  <span>Tip: add constructive notes about impact and communication.</span>
+                </div>
+              </div>
+
+              <div class="sectionHead" style="margin: 10px 0 10px;">
+                <h2>Leave a review</h2>
+                <p>Use the star selector and add a short note.</p>
+              </div>
+
+              <div class="formGrid">
+                <div class="field">
+                  <label for="revName">Name (optional)</label>
+                  <input class="control" id="revName" />
+                </div>
+                <div class="field">
+                  <label for="revRole">Your role (optional)</label>
+                  <input class="control" id="revRole" />
+                </div>
+              </div>
+
+              <div class="field" style="margin-top: 10px;">
+                <label>Rating</label>
+                <div class="stars" id="revStars" aria-label="Select rating" role="radiogroup"></div>
+                <div class="hint">Keyboard: focus a star and press Enter to set the rating.</div>
+              </div>
+
+              <div class="field" style="margin-top: 10px;">
+                <label for="revText">Review</label>
+                <textarea class="control" id="revText"></textarea>
+              </div>
+
+              <div class="row">
+                <button class="btn primary" type="button" id="addReviewBtn">
+                  <span class="icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M12 20h9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span>Submit</span>
+                </button>
+                <button class="btn" type="button" id="clearReviewsBtn">
+                  <span class="icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M3 6h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M8 6V4h8v2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M7 6l1 16h8l1-16" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                  <span>Clear (session)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="cardInner">
+              <div class="sectionHead" style="margin:0 0 10px;">
+                <h2>Recent reviews</h2>
+                <p>Sorted newest-first.</p>
+              </div>
+
+              <div class="reviewList" id="reviewList" aria-live="polite">
+                <div class="item" style="background: transparent;">
+                  <div class="badge" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                      <path d="M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z" stroke="currentColor" stroke-width="2"/>
+                      <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M9 10h.01M15 10h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3>No reviews yet</h3>
+                    <p>Add the first review to populate this section and update the average rating.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sectionHead" style="margin: 16px 0 10px;">
+                <h2>Review export</h2>
+                <p>Copy a plain-text summary for performance reviews or recommendations.</p>
+              </div>
+
+              <div class="row">
+                <button class="btn" type="button" id="copyReviewSummaryBtn">
+                  <span class="icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                      <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                  <span>Copy Review Summary</span>
+                </button>
+                <div class="chip">
+                  <span class="dot" aria-hidden="true" style="background: var(--accent2); box-shadow: 0 0 0 5px rgba(46,233,167,.10)"></span>
+                  <span id="reviewSummaryMeta">Ready</span>
+                </div>
+              </div>
+
+              <div class="out">
+                <pre id="reviewSummaryOut">No review summary available yet.</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="reveal">
+        <div class="sectionHead">
+          <h2>Contact</h2>
+          <p>Generate a message and copy it. (No email address is embedded here.)</p>
+        </div>
+
+        <div class="card">
+          <div class="cardInner">
+            <div class="formGrid">
+              <div class="field">
+                <label for="cName">Your name</label>
+                <input class="control" id="cName" />
+              </div>
+              <div class="field">
+                <label for="cTopic">Topic</label>
+                <select class="control" id="cTopic">
+                  <option>Interview / role discussion</option>
+                  <option>Contract QA support</option>
+                  <option>Test strategy review</option>
+                  <option>Automation consultation</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field" style="margin-top: 10px;">
+              <label for="cDetails">Details</label>
+              <textarea class="control" id="cDetails"></textarea>
+            </div>
+
+            <div class="row">
+              <button class="btn primary" type="button" id="genMsgBtn">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M4 4h16v16H4V4Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                <span>Generate Message</span>
+              </button>
+              <button class="btn" type="button" id="copyMsgBtn">
+                <span class="icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M9 9h10v10H9V9Z" stroke="currentColor" stroke-width="2"/>
+                    <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </span>
+                <span>Copy</span>
+              </button>
+              <div class="chip">
+                <span class="dot" aria-hidden="true" style="background: var(--accent); box-shadow: 0 0 0 5px rgba(124,92,255,.10)"></span>
+                <span id="contactMeta">Ready</span>
+              </div>
+            </div>
+
+            <div class="out" aria-live="polite">
+              <pre id="contactOut">Generate a message for recruiting, consulting, or collaboration.</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div class="foot">
+        <div>Built as a single-file, interactive portfolio with glassmorphism, subtle effects, and zero storage.</div>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="btn ghost" type="button" id="toTopBtn" aria-label="Back to top">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 19V7m0 0 5 5m-5-5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Top</span>
+          </button>
+          <span class="pillMini" id="clockPill" aria-label="Local time"></span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toastWrap" id="toastWrap" aria-live="polite" aria-relevant="additions"></div>
+  </main>
+
+  <!-- Command palette modal -->
+  <dialog id="cmd" style="
+    border:none; padding:0; background: transparent; max-width: 720px; width: calc(100vw - 32px);
+  ">
+    <div class="card" style="box-shadow: var(--shadow);">
+      <div class="cardInner">
+        <div class="sectionHead" style="margin:0 0 10px;">
+          <h2>Commands</h2>
+          <p>Jump fast. Press Escape to close.</p>
+        </div>
+        <div class="field">
+          <label for="cmdInput">Command</label>
+          <input class="control" id="cmdInput" />
+          <div class="hint">Try: toolkit, reviews, export, theme, top</div>
+        </div>
+        <div class="row">
+          <button class="btn primary" type="button" id="runCmdBtn">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 5v14l11-7L8 5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>Run</span>
+          </button>
+          <button class="btn" type="button" id="closeCmdBtn">
+            <span class="icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>Close</span>
+          </button>
+        </div>
+        <div class="out">
+          <pre id="cmdOut">Type a command and run it.</pre>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const $ = (sel, root=document) => root.querySelector(sel);
+      const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+      const state = {
+        artifacts: 0,
+        apiChecks: 0,
+        reviews: [],
+        currentReviewRating: 0,
+        profileSummary: ""
+      };
+
+      function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+      function toast(title, msg){
+        const wrap = $("#toastWrap");
+        const el = document.createElement("div");
+        el.className = "toast";
+        el.innerHTML = `
+          <div class="ticon" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2l2.4 6.7L21 9l-5.3 4.1 2 6.9-5.7-3.9-5.7 3.9 2-6.9L3 9l6.6-.3L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="tbody">
+            <p class="ttitle"></p>
+            <p class="tmsg"></p>
+          </div>
+          <button class="tclose" type="button" aria-label="Dismiss">✕</button>
+        `;
+        el.querySelector(".ttitle").textContent = title;
+        el.querySelector(".tmsg").textContent = msg;
+        const close = el.querySelector(".tclose");
+        close.addEventListener("click", () => el.remove());
+        wrap.appendChild(el);
+        setTimeout(()=>{ try{ el.remove(); }catch(e){} }, 4200);
+      }
+
+      async function copyToClipboard(text, successTitle="Copied"){
+        try{
+          await navigator.clipboard.writeText(text);
+          toast(successTitle, "Content was copied to the clipboard.");
+          return true;
+        }catch(e){
+          console.error(e);
+          toast("Copy failed", "Clipboard permission was not available. You can manually select and copy the output text.");
+          return false;
+        }
+      }
+
+      function smoothScrollTo(id){
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.scrollIntoView({behavior: "smooth", block: "start"});
+      }
+
+      function setTheme(next){
+        const root = document.body;
+        const isLight = next === "light";
+        root.setAttribute("data-theme", isLight ? "light" : "dark");
+        $("#themeLabel").textContent = isLight ? "Light" : "Dark";
+        try{ drawBgOnce(); }catch(e){ console.error(e); }
+      }
+
+      function toggleTheme(){
+        const cur = document.body.getAttribute("data-theme") || "dark";
+        setTheme(cur === "dark" ? "light" : "dark");
+      }
+
+      function nowStamp(){
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth()+1).padStart(2,"0");
+        const day = String(d.getDate()).padStart(2,"0");
+        const hh = String(d.getHours()).padStart(2,"0");
+        const mm = String(d.getMinutes()).padStart(2,"0");
+        return `${y}-${m}-${day} ${hh}:${mm}`;
+      }
+
+      // Loader
+      function initLoader(){
+        const loader = $("#loader");
+        const fill = $("#barFill");
+        const pctEl = $("#loaderPct");
+        const stageEl = $("#loaderStage");
+        const stages = [
+          {p: 18, t: "Warming up glass layers"},
+          {p: 38, t: "Polishing UI interactions"},
+          {p: 58, t: "Calibrating QA toolkit"},
+          {p: 76, t: "Rendering effects"},
+          {p: 92, t: "Final checks"},
+          {p: 100, t: "Ready"}
+        ];
+        let pct = 0;
+        let si = 0;
+
+        const start = performance.now();
+        function tick(t){
+          const elapsed = t - start;
+          const target = clamp(Math.floor(elapsed / 14), 0, 100);
+          pct = Math.max(pct, target);
+
+          // Map stages
+          while(si < stages.length && pct >= stages[si].p){
+            stageEl.textContent = stages[si].t;
+            si++;
+          }
+
+          pctEl.textContent = String(pct);
+          fill.style.width = pct + "%";
+
+          if(pct < 100){
+            requestAnimationFrame(tick);
+          }else{
+            setTimeout(()=> loader.classList.add("hide"), 140);
+            setTimeout(()=> loader.remove(), 520);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      // Background FX (soft blobs)
+      let bg = { ctx: null, w: 0, h: 0, blobs: [], raf: 0 };
+      function resizeBg(){
+        const c = $("#bgfx");
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        const w = Math.floor(window.innerWidth);
+        const h = Math.floor(window.innerHeight);
+        c.width = Math.floor(w * dpr);
+        c.height = Math.floor(h * dpr);
+        c.style.width = w + "px";
+        c.style.height = h + "px";
+        bg.ctx = c.getContext("2d");
+        bg.ctx.setTransform(dpr,0,0,dpr,0,0);
+        bg.w = w;
+        bg.h = h;
+      }
+      function initBlobs(){
+        const seed = (n)=> {
+          const x = Math.sin(n) * 10000;
+          return x - Math.floor(x);
+        };
+        const count = 7;
+        bg.blobs = Array.from({length: count}, (_,i) => {
+          const r = 120 + seed(i+1)*180;
+          return {
+            x: seed(i+11) * bg.w,
+            y: seed(i+21) * bg.h,
+            r,
+            vx: (seed(i+31)-.5) * 0.22,
+            vy: (seed(i+41)-.5) * 0.20,
+            hue: 210 + seed(i+51)*110,
+            alpha: 0.12 + seed(i+61)*0.10
+          };
+        });
+      }
+      function themeTint(){
+        const isLight = document.body.getAttribute("data-theme") === "light";
+        return isLight ? 0.65 : 1.0;
+      }
+      function drawBgOnce(){
+        // one draw so theme switch feels immediate even if reduced motion
+        if(!bg.ctx) return;
+        const ctx = bg.ctx;
+        ctx.clearRect(0,0,bg.w,bg.h);
+        const k = themeTint();
+        for(const b of bg.blobs){
+          const grd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+          const a = b.alpha * k;
+          grd.addColorStop(0, `hsla(${b.hue}, 90%, 62%, ${a})`);
+          grd.addColorStop(1, `hsla(${b.hue}, 90%, 62%, 0)`);
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+      function animateBg(){
+        try{
+          if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          cancelAnimationFrame(bg.raf);
+          const ctx = bg.ctx;
+          if(!ctx) return;
+          const k = themeTint();
+
+          const step = ()=>{
+            ctx.clearRect(0,0,bg.w,bg.h);
+            for(const b of bg.blobs){
+              b.x += b.vx;
+              b.y += b.vy;
+              if(b.x < -b.r) b.x = bg.w + b.r;
+              if(b.x > bg.w + b.r) b.x = -b.r;
+              if(b.y < -b.r) b.y = bg.h + b.r;
+              if(b.y > bg.h + b.r) b.y = -b.r;
+
+              const grd = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+              const a = b.alpha * k;
+              grd.addColorStop(0, `hsla(${b.hue}, 90%, 62%, ${a})`);
+              grd.addColorStop(1, `hsla(${b.hue}, 90%, 62%, 0)`);
+              ctx.fillStyle = grd;
+              ctx.beginPath();
+              ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+              ctx.fill();
+            }
+            bg.raf = requestAnimationFrame(step);
+          };
+          bg.raf = requestAnimationFrame(step);
+        }catch(e){
+          console.error(e);
+        }
+      }
+
+      // Reveal on scroll
+      function initReveal(){
+        const els = $$(".reveal");
+        if(!("IntersectionObserver" in window)){
+          els.forEach(el => el.classList.add("in"));
+          return;
+        }
+        const io = new IntersectionObserver((entries)=>{
+          for(const en of entries){
+            if(en.isIntersecting){
+              en.target.classList.add("in");
+              io.unobserve(en.target);
+            }
+          }
+        }, { threshold: 0.12 });
+        els.forEach(el => io.observe(el));
+      }
+
+      // Skills data (not claiming personal history; these are competency areas)
+      const skills = [
+        {cat:"manual", name:"Test design (boundary, equivalence, state)", desc:"Translate requirements into high-signal cases with traceable coverage.", level: 92},
+        {cat:"manual", name:"Exploratory testing", desc:"Session-based exploration with crisp notes and risk-driven charters.", level: 88},
+        {cat:"process", name:"Defect reporting & triage", desc:"Minimal repro, impact framing, and priorities that align with product risk.", level: 90},
+        {cat:"process", name:"Release readiness & QA sign-off", desc:"Explicit known issues, test evidence, and pragmatic go/no-go decisions.", level: 86},
+        {cat:"api", name:"API testing (contracts, negative paths)", desc:"Validate schemas, auth, idempotency, and error semantics.", level: 84},
+        {cat:"automation", name:"Automation strategy", desc:"Start with stable smoke paths; keep suites readable and low-flake.", level: 80},
+        {cat:"automation", name:"UI automation practices", desc:"Selectors, waits, and diagnostics designed for maintainability.", level: 78},
+        {cat:"process", name:"Metrics that avoid vanity", desc:"Measure signal: flakiness, escaped defects, lead time to detect.", level: 82}
+      ];
+
+      function renderSkills(){
+        const list = $("#skillList");
+        list.innerHTML = "";
+        for(const s of skills){
+          const el = document.createElement("div");
+          el.className = "skill";
+          el.dataset.cat = s.cat;
+          el.innerHTML = `
+            <div>
+              <h4>${escapeHtml(s.name)}</h4>
+              <small>${escapeHtml(s.desc)}</small>
+            </div>
+            <div class="meter">
+              <div class="rail" aria-hidden="true"><b style="width:0%"></b></div>
+              <div class="pct">${s.level}%</div>
+            </div>
+          `;
+          list.appendChild(el);
+        }
+      }
+
+      function animateSkillMetersVisible(){
+        const container = $("#skills");
+        const rails = $$(".rail > b", container);
+
+        if(!("IntersectionObserver" in window)){
+          rails.forEach((b,i) => b.style.width = skills[i].level + "%");
+          return;
+        }
+        const io = new IntersectionObserver((entries)=>{
+          for(const en of entries){
+            if(en.isIntersecting){
+              rails.forEach((b,i) => b.style.width = skills[i].level + "%");
+              io.disconnect();
+              return;
+            }
+          }
+        }, { threshold: 0.25 });
+        io.observe(container);
+      }
+
+      function setSkillFilter(filter){
+        const btns = $$("[data-skill-filter]");
+        btns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.skillFilter === filter)));
+        const items = $$(".skill");
+        items.forEach(it=>{
+          const show = (filter === "all" || it.dataset.cat === filter);
+          it.style.display = show ? "" : "none";
+        });
+      }
+
+      function initSkillFilters(){
+        $$("[data-skill-filter]").forEach(btn=>{
+          btn.addEventListener("click", ()=> setSkillFilter(btn.dataset.skillFilter));
+        });
+      }
+
+      function escapeHtml(str){
+        return String(str)
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#039;");
+      }
+
+      // Toolkit tabs
+      function setTab(which){
+        const map = {
+          tc: { tab: $("#tab-tc"), panel: $("#panel-tc") },
+          bug:{ tab: $("#tab-bug"), panel: $("#panel-bug") },
+          api:{ tab: $("#tab-api"), panel: $("#panel-api") }
+        };
+        for(const k of Object.keys(map)){
+          const on = (k === which);
+          map[k].tab.setAttribute("aria-selected", String(on));
+          map[k].panel.classList.toggle("active", on);
+        }
+      }
+      function initTabs(){
+        $("#tab-tc").addEventListener("click", ()=> setTab("tc"));
+        $("#tab-bug").addEventListener("click", ()=> setTab("bug"));
+        $("#tab-api").addEventListener("click", ()=> setTab("api"));
+      }
+
+      // Test case generator (heuristic-based)
+      function normalizeText(t){
+        return String(t || "").trim().replace(/\s+/g," ");
+      }
+
+      function generateTestCases(story, context){
+        const s = normalizeText(story);
+        const c = normalizeText(context);
+        if(!s) return { text: "", count: 0 };
+
+        const hasAuth = /\b(auth|login|sign in|sign-in|oauth|token|session|password|mfa|2fa)\b/i.test(s + " " + c);
+        const hasMoney = /\b(payment|checkout|invoice|refund|price|billing|subscription|plan|currency)\b/i.test(s + " " + c);
+        const hasUpload = /\b(upload|file|attachment|image|pdf|document)\b/i.test(s + " " + c);
+        const hasSearch = /\b(search|filter|sort|query|results)\b/i.test(s + " " + c);
+        const hasProfile = /\b(profile|settings|preference|account)\b/i.test(s + " " + c);
+        const hasRole = /\b(admin|role|permission|rbac|access)\b/i.test(s + " " + c);
+
+        const base = [];
+        base.push(["Happy path", "Verify the primary user journey succeeds end-to-end and produces the expected state change."]);
+        base.push(["Validation", "Verify required fields, format constraints, and meaningful error messaging."]);
+        base.push(["Boundaries", "Test min/max lengths, numeric boundaries, and empty/whitespace-only inputs where applicable."]);
+        base.push(["Negative", "Use invalid values, missing dependencies, and interrupted flows to confirm safe failure behavior."]);
+        base.push(["State", "Verify behavior across states: new, existing, partially-complete, and after cancellation/back navigation."]);
+        base.push(["Resilience", "Simulate network instability or slow responses; verify loading states and safe retries."]);
+        base.push(["Usability", "Verify keyboard navigation, focus order, and clear affordances for the critical actions."]);
+        base.push(["Accessibility", "Verify labels, contrast, and that key flows work with reduced motion settings."]);
+        base.push(["Observability", "Confirm user-visible errors are actionable; confirm logs/IDs are available if the product provides them."]);
+
+        const focused = [];
+        if(hasAuth){
+          focused.push(["Authentication", "Verify session lifecycle: fresh login, expired session, logout, and re-auth prompts."]);
+          focused.push(["Security", "Verify error messages do not reveal sensitive details; ensure protected routes require auth."]);
+        }
+        if(hasRole){
+          focused.push(["Authorization", "Verify role-based access: allowed actions succeed and forbidden actions are blocked with correct messaging."]);
+        }
+        if(hasMoney){
+          focused.push(["Payments", "Verify rounding, currency formatting, and failure modes (declined, timeout) are handled safely."]);
+          focused.push(["Data integrity", "Verify no double-charging / duplicate actions on retries and refresh."]);
+        }
+        if(hasUpload){
+          focused.push(["Uploads", "Verify file types, size limits, and corrupted files; confirm errors are clear and safe."]);
+          focused.push(["Performance", "Verify upload progress and behavior on cancel/retry."]);
+        }
+        if(hasSearch){
+          focused.push(["Search/Filter", "Verify exact match, partial match, case/diacritics behavior, and stable sorting across pages."]);
+          focused.push(["Empty states", "Verify zero-results behavior and reset/clear filters behavior."]);
+        }
+        if(hasProfile){
+          focused.push(["Persistence", "Verify updates persist across refresh and re-login (if applicable to the product)."]);
+        }
+
+        // Produce text
+        const lines = [];
+        lines.push(`# Test Cases`);
+        lines.push(`Generated: ${nowStamp()}`);
+        lines.push(``);
+        lines.push(`## Input`);
+        lines.push(`- Requirement: ${s}`);
+        if(c) lines.push(`- Context: ${c}`);
+        lines.push(``);
+        lines.push(`## Core coverage (risk-aware)`);
+        let n = 1;
+        for(const [k, d] of base){
+          lines.push(`${n}. [${k}] ${d}`);
+          n++;
+        }
+        if(focused.length){
+          lines.push(``);
+          lines.push(`## Targeted coverage (based on keywords)`);
+          for(const [k,d] of focused){
+            lines.push(`${n}. [${k}] ${d}`);
+            n++;
+          }
+        }
+        lines.push(``);
+        lines.push(`## Notes`);
+        lines.push(`- Add data variations for roles, locales, time zones, and feature flags if present.`);
+        lines.push(`- If the flow modifies data, include idempotency and duplicate-submission checks.`);
+
+        return { text: lines.join("\n"), count: n-1 };
+      }
+
+      // Bug report builder
+      function buildBugMarkdown(){
+        const title = normalizeText($("#bugTitle").value);
+        const sev = $("#bugSeverity").value;
+        const env = normalizeText($("#bugEnv").value);
+        const area = normalizeText($("#bugArea").value);
+        const steps = normalizeText($("#bugSteps").value);
+        const exp = normalizeText($("#bugExpected").value);
+        const act = normalizeText($("#bugActual").value);
+        const impact = normalizeText($("#bugImpact").value);
+        const notes = normalizeText($("#bugNotes").value);
+
+        const missing = [];
+        if(!title) missing.push("Title");
+        if(!steps) missing.push("Steps");
+        if(!exp) missing.push("Expected");
+        if(!act) missing.push("Actual");
+
+        if(missing.length){
+          $("#bugMeta").textContent = `Missing: ${missing.join(", ")}`;
+        }else{
+          $("#bugMeta").textContent = "Built";
+        }
+
+        const lines = [];
+        lines.push(`# ${title || "Bug Report"}`);
+        lines.push(``);
+        lines.push(`- Severity: ${sev}`);
+        if(area) lines.push(`- Area: ${area}`);
+        if(env) lines.push(`- Environment: ${env}`);
+        lines.push(`- Reported: ${nowStamp()}`);
+        lines.push(``);
+        lines.push(`## Steps to reproduce`);
+        lines.push(steps ? steps : "(Add steps to reproduce.)");
+        lines.push(``);
+        lines.push(`## Expected result`);
+        lines.push(exp ? exp : "(Add expected result.)");
+        lines.push(``);
+        lines.push(`## Actual result`);
+        lines.push(act ? act : "(Add actual result.)");
+        lines.push(``);
+        if(impact){
+          lines.push(`## Impact`);
+          lines.push(impact);
+          lines.push(``);
+        }
+        if(notes){
+          lines.push(`## Notes`);
+          lines.push(notes);
+          lines.push(``);
+        }
+        lines.push(`## Attachments checklist`);
+        lines.push(`- [ ] Screenshot or short recording`);
+        lines.push(`- [ ] Console/network logs (if relevant)`);
+        lines.push(`- [ ] Request/response samples (if relevant)`);
+        lines.push(`- [ ] Build number / commit hash`);
+
+        return lines.join("\n");
+      }
+
+      // API smoke check
+      let apiAbort = null;
+
+      function safeJsonParse(text){
+        try{
+          const v = JSON.parse(text);
+          return { ok: true, value: v };
+        }catch(e){
+          return { ok: false, error: e };
+        }
+      }
+
+      async function runApiSmoke(){
+        const url = normalizeText($("#apiUrl").value);
+        const method = $("#apiMethod").value;
+        const headersText = $("#apiHeaders").value.trim();
+        const bodyText = $("#apiBody").value;
+
+        if(!url){
+          $("#apiMeta").textContent = "Missing URL";
+          $("#apiDot").style.background = "var(--warn)";
+          toast("API check", "Enter a request URL.");
+          return;
+        }
+
+        let headers = {};
+        if(headersText){
+          const parsed = safeJsonParse(headersText);
+          if(!parsed.ok || typeof parsed.value !== "object" || Array.isArray(parsed.value)){
+            $("#apiMeta").textContent = "Headers must be a JSON object";
+            $("#apiDot").style.background = "var(--warn)";
+            toast("API check", "Headers must be valid JSON in object form.");
+            return;
+          }
+          headers = parsed.value;
+        }
+
+        let body = undefined;
+        let bodyKind = "none";
+        if(method !== "GET" && method !== "HEAD"){
+          const t = bodyText.trim();
+          if(t){
+            const parsed = safeJsonParse(t);
+            if(parsed.ok){
+              body = JSON.stringify(parsed.value);
+              headers = Object.assign({"Content-Type":"application/json"}, headers);
+              bodyKind = "json";
+            }else{
+              body = bodyText;
+              bodyKind = "text";
+            }
+          }
+        }
+
+        $("#apiMeta").textContent = "Running…";
+        $("#apiDot").style.background = "var(--accent)";
+        $("#abortApiBtn").disabled = false;
+
+        const controller = new AbortController();
+        apiAbort = controller;
+
+        const start = performance.now();
+        let res, txt, err = null;
+        try{
+          res = await fetch(url, { method, headers, body, signal: controller.signal, redirect: "follow" });
+          txt = await res.text();
+        }catch(e){
+          err = e;
+        }finally{
+          apiAbort = null;
+          $("#abortApiBtn").disabled = true;
+          state.apiChecks++;
+          $("#metricChecks").textContent = String(state.apiChecks);
+          state.artifacts++;
+          $("#metricArtifacts").textContent = String(state.artifacts);
+        }
+
+        const ms = Math.round(performance.now() - start);
+
+        if(err){
+          const isAbort = (err && (err.name === "AbortError"));
+          $("#apiMeta").textContent = isAbort ? "Aborted" : "Failed";
+          $("#apiDot").style.background = "var(--bad)";
+          const out = [];
+          out.push(`# API Smoke Check`);
+          out.push(`Time: ${nowStamp()}`);
+          out.push(`Request: ${method} ${url}`);
+          out.push(`Duration: ${ms}ms`);
+          out.push(`Result: ${isAbort ? "ABORTED" : "ERROR"}`);
+          out.push(`Error: ${err.message || String(err)}`);
+          out.push(``);
+          out.push(`Notes:`);
+          out.push(`- If this is a CORS issue, try running the request from a server-side tool (curl/Postman) or enable CORS on the endpoint.`);
+          $("#apiOut").textContent = out.join("\n");
+          toast("API check", isAbort ? "Request aborted." : "Request failed (see output).");
+          return;
+        }
+
+        const status = res.status;
+        const ok = res.ok;
+        $("#apiMeta").textContent = ok ? `OK ${status}` : `HTTP ${status}`;
+        $("#apiDot").style.background = ok ? "var(--good)" : "var(--warn)";
+
+        // Response preview
+        let preview = txt;
+        const max = 4000;
+        if(preview.length > max){
+          preview = preview.slice(0, max) + `\n\n…(truncated to ${max} chars)…`;
+        }
+
+        // Try JSON pretty
+        let pretty = null;
+        const parsed = safeJsonParse(txt);
+        if(parsed.ok){
+          try{ pretty = JSON.stringify(parsed.value, null, 2); }catch(e){ pretty = null; }
+        }
+
+        const lines = [];
+        lines.push(`# API Smoke Check`);
+        lines.push(`Time: ${nowStamp()}`);
+        lines.push(`Request: ${method} ${url}`);
+        lines.push(`Duration: ${ms}ms`);
+        lines.push(`Status: ${status} ${res.statusText || ""}`.trim());
+        lines.push(`Body sent: ${bodyKind}`);
+        lines.push(``);
+        lines.push(`## Response headers (subset)`);
+        const want = ["content-type","date","server","cache-control","x-request-id","x-correlation-id"];
+        for(const k of want){
+          const v = res.headers.get(k);
+          if(v) lines.push(`- ${k}: ${v}`);
+        }
+        lines.push(``);
+        lines.push(`## Response preview`);
+        lines.push(pretty ? pretty : preview);
+
+        $("#apiOut").textContent = lines.join("\n");
+        toast("API check complete", ok ? `Status ${status} in ${ms}ms.` : `HTTP ${status} in ${ms}ms.`);
+      }
+
+      // Reviews
+      function starSvg(){
+        return `
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 2l2.4 6.7L21 9l-5.3 4.1 2 6.9-5.7-3.9-5.7 3.9 2-6.9L3 9l6.6-.3L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        `;
+      }
+
+      function renderStarPicker(container, getValue, setValue){
+        container.innerHTML = "";
+        for(let i=1;i<=5;i++){
+          const s = document.createElement("span");
+          s.className = "star" + (i <= getValue() ? " on" : "");
+          s.innerHTML = starSvg();
+          s.setAttribute("role", "radio");
+          s.setAttribute("tabindex", i === 1 ? "0" : "-1");
+          s.setAttribute("aria-checked", String(i === getValue()));
+          s.setAttribute("aria-label", `${i} star${i===1?"":"s"}`);
+          s.addEventListener("click", ()=>{
+            setValue(i);
+            renderStarPicker(container, getValue, setValue);
+          });
+          s.addEventListener("keydown", (e)=>{
+            if(e.key === "Enter" || e.key === " "){
+              e.preventDefault();
+              setValue(i);
+              renderStarPicker(container, getValue, setValue);
+            }
+            if(e.key === "ArrowRight" || e.key === "ArrowDown"){
+              e.preventDefault();
+              const next = clamp(i+1, 1, 5);
+              container.children[next-1].focus();
+            }
+            if(e.key === "ArrowLeft" || e.key === "ArrowUp"){
+              e.preventDefault();
+              const prev = clamp(i-1, 1, 5);
+              container.children[prev-1].focus();
+            }
+          });
+          container.appendChild(s);
+        }
+      }
+
+      function renderAvgStars(){
+        const box = $("#avgStars");
+        box.innerHTML = "";
+        const avg = state.reviews.length ? (state.reviews.reduce((a,r)=>a+r.rating,0)/state.reviews.length) : 0;
+        const rounded = Math.round(avg * 10) / 10;
+        for(let i=1;i<=5;i++){
+          const s = document.createElement("span");
+          s.className = "star" + (i <= Math.round(avg) ? " on" : "");
+          s.style.cursor = "default";
+          s.innerHTML = starSvg();
+          s.setAttribute("aria-hidden", "true");
+          box.appendChild(s);
+        }
+        $("#avgScore").textContent = state.reviews.length ? String(rounded) : "—";
+        $("#metricAvg").textContent = state.reviews.length ? String(rounded) : "—";
+        $("#reviewCount").textContent = String(state.reviews.length);
+      }
+
+      function tinyStarsEl(rating){
+        const wrap = document.createElement("div");
+        wrap.className = "tinyStars";
+        for(let i=1;i<=5;i++){
+          const s = document.createElement("span");
+          s.className = (i<=rating) ? "on" : "";
+          s.innerHTML = starSvg();
+          wrap.appendChild(s);
+        }
+        return wrap;
+      }
+
+      function renderReviews(){
+        const list = $("#reviewList");
+        list.innerHTML = "";
+
+        if(!state.reviews.length){
+          list.innerHTML = `
+            <div class="item" style="background: transparent;">
+              <div class="badge" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24" fill="none">
+                  <path d="M4 12a8 8 0 1 0 16 0 8 8 0 0 0-16 0Z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M8 14s1.5 2 4 2 4-2 4-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M9 10h.01M15 10h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h3>No reviews yet</h3>
+                <p>Add the first review to populate this section and update the average rating.</p>
+              </div>
+            </div>
+          `;
+          $("#reviewSummaryOut").textContent = "No review summary available yet.";
+          $("#reviewSummaryMeta").textContent = "Ready";
+          renderAvgStars();
+          return;
+        }
+
+        const ordered = [...state.reviews].sort((a,b)=> b.ts - a.ts);
+        for(const r of ordered){
+          const el = document.createElement("div");
+          el.className = "review";
+          const who = r.name ? r.name : "Anonymous";
+          const role = r.role ? r.role : "—";
+          el.innerHTML = `
+            <div>
+              <h4>${escapeHtml(who)}</h4>
+              <div class="meta">
+                <span class="pillMini">Role: ${escapeHtml(role)}</span>
+                <span class="pillMini">Time: ${escapeHtml(r.when)}</span>
+              </div>
+              <div class="body">${escapeHtml(r.text)}</div>
+            </div>
+            <div class="right">
+              <div class="pillMini">Rating</div>
+            </div>
+          `;
+          el.querySelector(".right").appendChild(tinyStarsEl(r.rating));
+          list.appendChild(el);
+        }
+
+        // Summary
+        const avg = state.reviews.reduce((a,r)=>a+r.rating,0)/state.reviews.length;
+        const rounded = Math.round(avg * 10)/10;
+        const highlights = ordered.slice(0,3).map(r => {
+          const who = r.name ? r.name : "Anonymous";
+          const role = r.role ? r.role : "—";
+          return `- ${who} (${role}) — ${r.rating}/5 — ${r.text.replace(/\s+/g," ").trim()}`;
+        });
+
+        const summary = [
+          `Review Summary (this session)`,
+          `Generated: ${nowStamp()}`,
+          ``,
+          `Count: ${state.reviews.length}`,
+          `Average: ${rounded}/5`,
+          ``,
+          `Most recent highlights:`,
+          ...highlights
+        ].join("\n");
+
+        $("#reviewSummaryOut").textContent = summary;
+        $("#reviewSummaryMeta").textContent = "Updated";
+        renderAvgStars();
+      }
+
+      function addReview(){
+        const rating = state.currentReviewRating;
+        const text = normalizeText($("#revText").value);
+        const name = normalizeText($("#revName").value);
+        const role = normalizeText($("#revRole").value);
+
+        if(rating < 1){
+          toast("Review", "Select a star rating.");
+          return;
+        }
+        if(!text){
+          toast("Review", "Write a short review note.");
+          return;
+        }
+        const r = {
+          rating,
+          text,
+          name,
+          role,
+          when: nowStamp(),
+          ts: Date.now()
+        };
+        state.reviews.push(r);
+
+        $("#revText").value = "";
+        state.currentReviewRating = 0;
+        renderStarPicker($("#revStars"), ()=>state.currentReviewRating, (v)=> state.currentReviewRating = v);
+        renderReviews();
+        toast("Review submitted", "Thank you. The average rating updated.");
+
+        state.artifacts++;
+        $("#metricArtifacts").textContent = String(state.artifacts);
+      }
+
+      function clearReviews(){
+        state.reviews = [];
+        renderReviews();
+        toast("Cleared", "All reviews were cleared for this session.");
+      }
+
+      // About profile generator
+      function initTraits(){
+        $("#traits").addEventListener("click", (e)=>{
+          const btn = e.target.closest(".chipBtn");
+          if(!btn) return;
+          const cur = btn.getAttribute("aria-pressed") === "true";
+          btn.setAttribute("aria-pressed", String(!cur));
+        });
+      }
+
+      function generateProfileSummary(){
+        const focus = $("#profileFocus").value;
+        const domain = $("#profileDomain").value;
+        const traits = $$(`#traits .chipBtn[aria-pressed="true"]`).map(b=>b.dataset.trait);
+        const traitLine = traits.length ? traits.join(", ") : "reliable execution";
+
+        const s = [
+          `SQA Engineer focused on ${focus} for ${domain} products.`,
+          `Strengths include ${traitLine}, actionable defect communication, and risk-aware coverage.`,
+          `I collaborate closely with engineering and product to ship predictable releases while keeping test effort lean and high-signal.`
+        ].join(" ");
+
+        state.profileSummary = s;
+        $("#profileOut").textContent = s;
+        toast("Summary generated", "You can copy it or export the resume.");
+      }
+
+      // Contact message generator
+      function generateContactMessage(){
+        const name = normalizeText($("#cName").value) || "Hello";
+        const topic = $("#cTopic").value;
+        const details = normalizeText($("#cDetails").value);
+
+        const lines = [];
+        lines.push(`Subject: ${topic}`);
+        lines.push(``);
+        lines.push(`${name},`);
+        lines.push(``);
+        lines.push(`I would like to connect regarding: ${topic}.`);
+        if(details){
+          lines.push(``);
+          lines.push(`Details:`);
+          lines.push(details);
+        }
+        lines.push(``);
+        lines.push(`If you can share timing, scope, and priorities, I can respond with a testing approach and next steps.`);
+        lines.push(``);
+        lines.push(`Thanks,`);
+        lines.push(`[Your name]`);
+
+        const msg = lines.join("\n");
+        $("#contactOut").textContent = msg;
+        $("#contactMeta").textContent = "Generated";
+        toast("Message ready", "Copy and paste it into your email client.");
+        state.artifacts++;
+        $("#metricArtifacts").textContent = String(state.artifacts);
+      }
+
+      // Resume export (TXT)
+      function buildResumeText(){
+        const baseSummary = state.profileSummary || "SQA Engineer focused on risk-based testing, actionable defect reporting, and pragmatic automation.";
+        const reviewSummary = $("#reviewSummaryOut").textContent || "No review summary available yet.";
+
+        const lines = [];
+        lines.push(`SQA Engineer — Resume (Text Export)`);
+        lines.push(`Generated: ${nowStamp()}`);
+        lines.push(``);
+        lines.push(`SUMMARY`);
+        lines.push(baseSummary);
+        lines.push(``);
+        lines.push(`CORE COMPETENCIES`);
+        for(const s of skills){
+          lines.push(`- ${s.name}`);
+        }
+        lines.push(``);
+        lines.push(`QA TOOLKIT OUTPUTS`);
+        const tc = $("#tcOut").textContent || "";
+        const bug = $("#bugOut").textContent || "";
+        const api = $("#apiOut").textContent || "";
+        lines.push(`- Test cases included: ${tc.startsWith("# Test Cases") ? "Yes" : "No"}`);
+        lines.push(`- Bug report included: ${bug.startsWith("#") ? "Yes" : "No"}`);
+        lines.push(`- API smoke check included: ${api.startsWith("# API Smoke Check") ? "Yes" : "No"}`);
+        lines.push(``);
+        lines.push(`REVIEWS`);
+        lines.push(reviewSummary);
+
+        return lines.join("\n");
+      }
+
+      function downloadText(filename, text){
+        const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      // Command palette
+      function openCmd(){
+        const dlg = $("#cmd");
+        if(!dlg.open) dlg.showModal();
+        $("#cmdInput").focus();
+        $("#cmdOut").textContent = "Type a command and run it.";
+      }
+      function closeCmd(){
+        const dlg = $("#cmd");
+        if(dlg.open) dlg.close();
+      }
+      function runCmd(){
+        const raw = normalizeText($("#cmdInput").value).toLowerCase();
+        const out = $("#cmdOut");
+
+        const actions = [
+          {keys:["toolkit","qa toolkit","tools"], run:()=>{ closeCmd(); setTab("tc"); smoothScrollTo("toolkit"); toast("Navigated", "QA Toolkit opened."); }},
+          {keys:["reviews","review"], run:()=>{ closeCmd(); smoothScrollTo("reviews"); toast("Navigated", "Reviews section opened."); }},
+          {keys:["about"], run:()=>{ closeCmd(); smoothScrollTo("about"); toast("Navigated", "About section opened."); }},
+          {keys:["skills"], run:()=>{ closeCmd(); smoothScrollTo("skills"); toast("Navigated", "Skills section opened."); }},
+          {keys:["contact"], run:()=>{ closeCmd(); smoothScrollTo("contact"); toast("Navigated", "Contact section opened."); }},
+          {keys:["export","resume"], run:()=>{ closeCmd(); $("#exportBtn").click(); }},
+          {keys:["theme","toggle theme"], run:()=>{ toggleTheme(); out.textContent = "Theme toggled."; }},
+          {keys:["top","home"], run:()=>{ closeCmd(); smoothScrollTo("top"); }}
+        ];
+
+        if(!raw){
+          out.textContent = "Enter a command.";
+          return;
+        }
+
+        const found = actions.find(a => a.keys.includes(raw));
+        if(found){
+          found.run();
+        }else{
+          out.textContent = `Unknown command: "${raw}". Try: toolkit, reviews, export, theme, top.`;
+        }
+      }
+
+      // Clock
+      function initClock(){
+        const el = $("#clockPill");
+        function tick(){
+          const d = new Date();
+          const hh = String(d.getHours()).padStart(2,"0");
+          const mm = String(d.getMinutes()).padStart(2,"0");
+          const ss = String(d.getSeconds()).padStart(2,"0");
+          el.textContent = `Local time: ${hh}:${mm}:${ss}`;
+        }
+        tick();
+        setInterval(tick, 1000);
+      }
+
+      function initNavActions(){
+        $("#jumpToolkitBtn").addEventListener("click", ()=>{
+          setTab("tc");
+          smoothScrollTo("toolkit");
+        });
+        $("#scrollReviewsBtn").addEventListener("click", ()=> smoothScrollTo("reviews"));
+        $("#toTopBtn").addEventListener("click", ()=> smoothScrollTo("top"));
+
+        $("#themeBtn").addEventListener("click", toggleTheme);
+
+        $("#copySummaryBtn").addEventListener("click", ()=>{
+          const txt = "SQA Engineer focused on risk-based testing, actionable defect reporting, and pragmatic automation. I ship predictable quality by combining lean manual coverage with stable automation and clear release notes.";
+          copyToClipboard(txt, "Summary copied");
+        });
+
+        $("#exportBtn").addEventListener("click", ()=>{
+          const txt = buildResumeText();
+          downloadText("SQA_Engineer_Resume.txt", txt);
+          toast("Exported", "A text resume was downloaded.");
+          state.artifacts++;
+          $("#metricArtifacts").textContent = String(state.artifacts);
+        });
+      }
+
+      function initToolkitActions(){
+        $("#genTcBtn").addEventListener("click", ()=>{
+          const story = $("#tcStory").value;
+          const ctx = $("#tcContext").value;
+          const res = generateTestCases(story, ctx);
+          if(!res.text){
+            $("#tcMeta").textContent = "Missing requirement";
+            toast("Test cases", "Enter a requirement first.");
+            return;
+          }
+          $("#tcOut").textContent = res.text;
+          $("#tcMeta").textContent = `Generated ${res.count} cases`;
+          toast("Generated", `${res.count} test cases created.`);
+          state.artifacts++;
+          $("#metricArtifacts").textContent = String(state.artifacts);
+        });
+        $("#copyTcBtn").addEventListener("click", ()=>{
+          copyToClipboard($("#tcOut").textContent, "Test cases copied");
+        });
+
+        $("#buildBugBtn").addEventListener("click", ()=>{
+          const md = buildBugMarkdown();
+          $("#bugOut").textContent = md;
+          toast("Bug report built", "Markdown is ready to copy.");
+          state.artifacts++;
+          $("#metricArtifacts").textContent = String(state.artifacts);
+        });
+        $("#copyBugBtn").addEventListener("click", ()=>{
+          copyToClipboard($("#bugOut").textContent, "Bug report copied");
+        });
+
+        $("#runApiBtn").addEventListener("click", runApiSmoke);
+        $("#copyApiBtn").addEventListener("click", ()=>{
+          copyToClipboard($("#apiOut").textContent, "API result copied");
+        });
+        $("#abortApiBtn").addEventListener("click", ()=>{
+          if(apiAbort){
+            apiAbort.abort();
+          }
+        });
+      }
+
+      function initReviewActions(){
+        renderStarPicker($("#revStars"), ()=>state.currentReviewRating, (v)=> state.currentReviewRating = v);
+        renderAvgStars();
+        $("#addReviewBtn").addEventListener("click", addReview);
+        $("#clearReviewsBtn").addEventListener("click", clearReviews);
+        $("#copyReviewSummaryBtn").addEventListener("click", ()=>{
+          const txt = $("#reviewSummaryOut").textContent;
+          copyToClipboard(txt, "Review summary copied");
+        });
+      }
+
+      function initAboutActions(){
+        initTraits();
+        $("#buildProfileBtn").addEventListener("click", generateProfileSummary);
+        $("#copyProfileBtn").addEventListener("click", ()=>{
+          copyToClipboard($("#profileOut").textContent, "Summary copied");
+        });
+      }
+
+      function initContactActions(){
+        $("#genMsgBtn").addEventListener("click", generateContactMessage);
+        $("#copyMsgBtn").addEventListener("click", ()=>{
+          copyToClipboard($("#contactOut").textContent, "Message copied");
+        });
+      }
+
+      function initCmdPalette(){
+        $("#cmdBtn").addEventListener("click", openCmd);
+        $("#closeCmdBtn").addEventListener("click", closeCmd);
+        $("#runCmdBtn").addEventListener("click", runCmd);
+        $("#cmdInput").addEventListener("keydown", (e)=>{
+          if(e.key === "Enter"){
+            e.preventDefault();
+            runCmd();
+          }
+        });
+        document.addEventListener("keydown", (e)=>{
+          const isMac = navigator.platform.toLowerCase().includes("mac");
+          const mod = isMac ? e.metaKey : e.ctrlKey;
+          if(mod && e.key.toLowerCase() === "k"){
+            e.preventDefault();
+            openCmd();
+          }
+          if(e.key === "Escape"){
+            const dlg = $("#cmd");
+            if(dlg.open) dlg.close();
+          }
+        });
+      }
+
+      function initInputsDefaults(){
+        // Provide practical defaults without placeholders
+        $("#tcStory").value = "";
+        $("#tcContext").value = "";
+        $("#bugTitle").value = "";
+        $("#bugEnv").value = "";
+        $("#bugArea").value = "";
+        $("#bugSteps").value = "";
+        $("#bugExpected").value = "";
+        $("#bugActual").value = "";
+        $("#bugImpact").value = "";
+        $("#bugNotes").value = "";
+        $("#apiUrl").value = "";
+        $("#apiHeaders").value = "";
+        $("#apiBody").value = "";
+        $("#revName").value = "";
+        $("#revRole").value = "";
+        $("#revText").value = "";
+        $("#cName").value = "";
+        $("#cDetails").value = "";
+        $("#cmdInput").value = "";
+      }
+
+      function initMetrics(){
+        $("#metricArtifacts").textContent = String(state.artifacts);
+        $("#metricChecks").textContent = String(state.apiChecks);
+        $("#metricAvg").textContent = "—";
+      }
+
+      // Boot
+      document.addEventListener("DOMContentLoaded", ()=>{
+        try{
+          initLoader();
+          resizeBg();
+          initBlobs();
+          drawBgOnce();
+          animateBg();
+
+          window.addEventListener("resize", ()=>{
+            resizeBg();
+            initBlobs();
+            drawBgOnce();
+          }, {passive:true});
+
+          initReveal();
+          initClock();
+
+          initMetrics();
+          initInputsDefaults();
+
+          initNavActions();
+          initTabs();
+          renderSkills();
+          initSkillFilters();
+          animateSkillMetersVisible();
+
+          initToolkitActions();
+          initReviewActions();
+          initAboutActions();
+          initContactActions();
+          initCmdPalette();
+
+          // Default filter
+          setSkillFilter("all");
+
+          // Make avg stars container non-empty initially for layout stability
+          renderAvgStars();
+
+        }catch(e){
+          console.error(e);
+          toast("Initialization error", "Some features may not have loaded correctly. Check console for details.");
+          const loader = $("#loader");
+          if(loader) loader.remove();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
